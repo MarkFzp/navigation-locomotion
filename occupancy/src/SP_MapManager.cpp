@@ -281,7 +281,7 @@ bool SP_MapManager::IsCellPartiallyVisible(const PoseMatrix4f& poseInv, const in
 	return false;
 }
 
-unsigned int SP_MapManager::RunMapUpdate()
+unsigned int SP_MapManager::RunMapUpdate() // IMPORTANT: map update function
 {
 	std::set< std::pair<int, int> > modifiedSet;
 	float occupancyGridResolutionInverse = 1.0f / m_occupancyGridResolution;

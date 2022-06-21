@@ -19,7 +19,7 @@ from fmm import FMMPlanner
 resolution = None
 
 class SLAM:
-    def __init__(self, max_buffer_size=5, resolution=0.03, blur_sigma=0.5):
+    def __init__(self, max_buffer_size=5, resolution=0.03, blur_sigma=1.5):
         rospy.init_node('listener', anonymous=True)
         rospy.Subscriber('occupancy', OccupancyGrid, self.map_callback)
         rospy.Subscriber('/t265/odom/sample', Odometry, self.odom_callback)
@@ -73,7 +73,7 @@ class SLAM:
     def preprocess_map(self, map):
         map[map == -1] = 0
         map = gaussian_filter(map, sigma=self.blur_sigma)
-        map = (map < 50)
+        map = (map < 25)
 
         return map
     
@@ -191,9 +191,9 @@ def main():
         plt.clf()
         print('\n--------------------------')
         mmap, pos_mm, yaw, target_pos_mm = slam.get_global_map(target_pos)
-        planner = FMMPlanner(mmap, scale=1, step_size=5, obstacle_dist_cap=50, obstacle_dist_ratio=1)
+        planner = FMMPlanner(mmap)
         dd = planner.set_goal(target_pos_mm)
-        delta_y, delta_x, replan, stop = planner.get_short_term_goal(pos_mm)
+        delta_y, delta_x, replan, stop, local_cost = planner.get_short_term_goal(pos_mm)
         next_pos = np.array([delta_y, delta_x])
         
         print('map size: ', mmap.shape)
@@ -203,11 +203,18 @@ def main():
         print('target position: ', target_pos_mm)
 
         if args.plot:
+            plt.subplot(1, 2, 1)
             plt.imshow(dd, origin='lower')
             plt.plot([pos_mm[1]], [pos_mm[0]], 'ro', markersize=5)
-            plt.plot([int(target_pos_mm[1])], [int(target_pos_mm[0])], 'ro', markersize=5)
-            plt.plot([delta_x], [delta_y], 'g+', markersize=10)
+            plt.plot([target_pos_mm[1]], [target_pos_mm[0]], 'ro', markersize=5)
+            plt.plot([next_pos[1]], [next_pos[0]], 'g+', markersize=10)
             plt.colorbar()
+
+            plt.subplot(1, 2, 2)
+            plt.imshow(local_cost, origin='lower', cmap='spring')
+            plt.plot([pos_mm[1]- int(pos_mm[1]) + 5], [pos_mm[0]- int(pos_mm[0]) + 5], 'ro', markersize=5)
+            plt.colorbar()
+
             plt.show(block=False)
             plt.pause(0.0001)
 
