@@ -1,4 +1,5 @@
-# navigation-locomotion
-Codebase for "Coupling Vision and Proprioception for Navigation of Legged Robots"
+install by running install.sh
 
-To be released
+recompile by running recompile.sh
+
+start planning by run plan/main.py
