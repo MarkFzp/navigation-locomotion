@@ -1,3 +1,5 @@
+# [CVPR 2022] Codebase for "Coupling Vision and Proprioception for Navigation of Legged Robots"
+
 install intel realsense SDK at https://github.com/IntelRealSense/librealsense
 
 git clone this directionary to `~/catkin_ws/src`
