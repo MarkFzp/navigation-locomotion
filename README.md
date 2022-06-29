@@ -1,4 +1,4 @@
-# [CVPR 2022] Codebase for "Coupling Vision and Proprioception for Navigation of Legged Robots"
+# [CVPR 2022] Codebase for "[Coupling Vision and Proprioception for Navigation of Legged Robots](https://navigation-locomotion.github.io/)"
 
 install intel realsense SDK at https://github.com/IntelRealSense/librealsense
 
